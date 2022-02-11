@@ -67,8 +67,8 @@ class Controller:
         self.xd_max, self.yd_max = [
             float(a.split('=')[1]) for a in self._send('SPA? 1 0x4B 2 0x4B')]
         # set state:
-        self._enable_servo()
-        self._enable_joystick()
+        self._enable_servo(True)
+        self._enable_joystick(True)
         self._moving = False
         if self.verbose:
             self._print_attributes()
@@ -182,30 +182,26 @@ class Controller:
             print("%s:  finished setting parameter"%self.name)
         return None
 
-    def _enable_servo(self):
-        self._send('SVO 1 1 2 1', respond=False)
-        if self.very_verbose: print("%s: servo enabled"%self.name)
-        self._servo_enabled = True
+    def _enable_servo(self, enable):
+        if enable:
+            self._send('SVO 1 1 2 1', respond=False)
+        if not enable:
+            self._send('SVO 1 0 2 0', respond=False)
+        if self.very_verbose:
+            print("%s: enable servo = %s"%(self.name, enable))
+        self._servo_enabled = enable
         return None
 
-    def _disable_servo(self):
-        self._send('SVO 1 0 2 0', respond=False)
-        if self.very_verbose: print("%s: servo disabled"%self.name)
-        self._servo_enabled = False
-        return None
-
-    def _enable_joystick(self):
-        self._send('HIN 1 1', respond=False)
-        self._send('HIN 2 1', respond=False)
-        if self.very_verbose: print("%s: joystick enabled"%self.name)
-        self._joystick_enabled = True
-        return None
-
-    def _disable_joystick(self):
-        self._send('HIN 1 0', respond=False)
-        self._send('HIN 2 0', respond=False)
-        if self.very_verbose: print("%s: joystick disabled"%self.name)
-        self._joystick_enabled = False
+    def _enable_joystick(self, enable):
+        if enable:
+            self._send('HIN 1 1', respond=False)
+            self._send('HIN 2 1', respond=False)
+        if not enable:
+            self._send('HIN 1 0', respond=False)
+            self._send('HIN 2 0', respond=False)
+        if self.very_verbose:
+            print("%s: joystick enable = %s"%(self.name, enable))
+        self._joystick_enabled = enable
         return None
 
     def _reboot(self, finish_macro=True): # same as power cycle
@@ -230,14 +226,14 @@ class Controller:
             response = self.port.read(2)
             if response == b'0\n': break
         self._moving = False
-        if self._joystick_enabled: self._enable_joystick()      
+        if self._joystick_enabled: self._enable_joystick(True)      
         if self.verbose: print('%s:  -> finished moving'%self.name)
         self._check_errors()
         return None
 
     def move_mm(self, x, y, relative=True, block=True):
         self._finish_moving()
-        if self._joystick_enabled: self._disable_joystick()
+        if self._joystick_enabled: self._enable_joystick(False)
         if relative:
             self.x, self.y = float(self.x + x), float(self.y + y)
             cmd = 'MOV 1 %0.9f 2 %0.9f '%(self.x, self.y)
@@ -343,8 +339,8 @@ if __name__ == '__main__':
 ##    stage._get_parameter('0x3F')
 ##    stage._set_parameter('0x3F', 0.001)
 ##    stage._reboot()
-##    stage._disable_servo()
-##    stage._enable_servo()
+##    stage._enable_servo(False)
+##    stage._enable_servo(True)
 
     print('\nAbsolute and relative moves:')
     stage.move_mm(0, 0, relative=False)
