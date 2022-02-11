@@ -235,14 +235,19 @@ class Controller:
             response = self.port.read(2)
             if response == b'0\n': break
         self._moving = False
-        if self._joystick_enabled: self._enable_joystick(True)      
+        if self._joystick_enabled: # re-enable
+            self._send('HIN 1 1', respond=False)
+            self._send('HIN 2 1', respond=False)
         if self.verbose: print('%s:  -> finished moving'%self.name)
         self._check_errors()
         return None
 
+    # For max speed -> disable the joystick before calling move
     def move_mm(self, x, y, relative=True, block=True):
         self._finish_moving()
-        if self._joystick_enabled: self._enable_joystick(False)
+        if self._joystick_enabled: # disable
+            self._send('HIN 1 0', respond=False)
+            self._send('HIN 2 0', respond=False)
         if relative:
             self.x, self.y = float(self.x + x), float(self.y + y)
             cmd = 'MOV 1 %0.9f 2 %0.9f '%(self.x, self.y)
@@ -373,6 +378,7 @@ if __name__ == '__main__':
     stage.set_positional_tolerance_um(1, 1) # 0.2 -> 9.8
     
     stage.verbose = False
+    stage._enable_joystick(False)           # turn off joystick for max speed
     start = time.perf_counter()
     for i in range(moves):
         stage.move_mm(0, 0, relative=False)
@@ -380,5 +386,6 @@ if __name__ == '__main__':
     end = time.perf_counter()
     time_per_move_s = (end - start) / moves
     print(time_per_move_s, ' -> seconds per move')
+    stage._enable_joystick(True)            # re-enable joystick
 
     stage.close()
