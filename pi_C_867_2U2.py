@@ -240,7 +240,7 @@ class Controller:
         if self._joystick_enabled: self._disable_joystick()
         if relative:
             self.x, self.y = float(self.x + x), float(self.y + y)
-            cmd = 'MVR 1 %0.9f 2 %0.9f '%(self.x, self.y)
+            cmd = 'MOV 1 %0.9f 2 %0.9f '%(self.x, self.y)
         if not relative: # Abolute move
             self.x, self.y = float(x), float(y)
             cmd = 'MOV 1 %0.9f 2 %0.9f '%(self.x, self.y)
@@ -346,9 +346,9 @@ if __name__ == '__main__':
 ##    stage._disable_servo()
 ##    stage._enable_servo()
 
-    print('\nRelative and absolute moves:')
-    stage.move_mm(1, 1)
+    print('\nAbsolute and relative moves:')
     stage.move_mm(0, 0, relative=False)
+    stage.move_mm(1, 1)
 
     print('\nNon-blocking call:')
     stage.move_mm(1, 1, relative=False, block=False)
