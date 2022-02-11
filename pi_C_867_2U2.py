@@ -218,6 +218,15 @@ class Controller:
         if self.verbose: print('done.')
         return None
 
+    def get_position_mm(self):
+        if self.verbose:
+            print("%s: getting position"%self.name)
+        self.x, self.y = [
+            float(a.split('=')[1]) for a in self._send('MOV? 1 2')]
+        if self.verbose:
+            print("%s:  = (%6.03f, %6.03f) (mm)"%(self.name, self.x, self.y))
+        return self.x, self.y
+
     def _finish_moving(self):
         if not self._moving:
             return None
@@ -341,6 +350,9 @@ if __name__ == '__main__':
 ##    stage._reboot()
 ##    stage._enable_servo(False)
 ##    stage._enable_servo(True)
+
+    print('\nGet position (joystick causes nonconcurrent attributes)')
+    stage.get_position_mm()
 
     print('\nAbsolute and relative moves:')
     stage.move_mm(0, 0, relative=False)
