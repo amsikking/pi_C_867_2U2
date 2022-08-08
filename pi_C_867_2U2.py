@@ -250,6 +250,7 @@ class Controller:
             self._send('HIN 1 0', respond=False)
             self._send('HIN 2 0', respond=False)
         if relative:
+            self.get_position_mm() # must update self.x, self.y due to joystick
             self.x, self.y = float(self.x + x), float(self.y + y)
             cmd = 'MOV 1 %0.9f 2 %0.9f '%(self.x, self.y)
         if not relative: # Abolute move
