@@ -390,4 +390,47 @@ if __name__ == '__main__':
     print(time_per_move_s, ' -> seconds per move')
     stage._enable_joystick(True)            # re-enable joystick
 
+##    print("\nTesting 384 well plate:")
+##    # find A1 center:
+##    x_mm_A1_ul, y_mm_A1_ul = (50.2282, -34.8627) # A1 upper left
+##    x_mm_A1_lr, y_mm_A1_lr = (47.3277, -31.8921) # A1 lower right
+##    x_mm_A1_c, y_mm_A1_c = (x_mm_A1_lr + (x_mm_A1_ul - x_mm_A1_lr)/2,
+##                            y_mm_A1_lr + (y_mm_A1_ul - y_mm_A1_lr)/2)
+##    # generate position array:
+##    rows, cols = 16, 24
+##    well_spacing_mm = 4.5
+##    XY_stage_positions = []
+##    for c in range(cols):
+##        col_positions = []
+##        for r in range(rows): # move y-axis more frequently
+##            well = 'r%02ic%02i'%(r, c)
+##            col_positions.append(
+##                (well,
+##                (x_mm_A1_c - c * well_spacing_mm,   # -ve for x
+##                 y_mm_A1_c + r * well_spacing_mm,   # +ve for y
+##                 'absolute')))
+##        # snake scan:
+##        if not c % 2:   # odd number:
+##            XY_stage_positions.append(col_positions)
+##        else:           # even number:
+##            XY_stage_positions.append(col_positions[::-1]) # reverse
+##    # tile:
+##    stage.move_mm(0, 0, relative=False)
+##    stage.verbose = False
+##    t0 = time.perf_counter()
+##    for c in range(cols):
+##        for r in range(rows):
+##            well =  XY_stage_positions[c][r][0]
+##            XY_mm = XY_stage_positions[c][r][1]
+##            print('-> well: %s (%s)'%(well, XY_mm))
+##            # Move to XY position:
+##            stage.move_mm(XY_mm[0], XY_mm[1], relative=False)
+##    stage.move_mm(0, 0, relative=False)    
+##    t1 = time.perf_counter()
+##    # results:
+##    total_time = t1 - t0
+##    print('total_time = %0.2fs'%total_time)                 # 167.50s
+##    time_per_move_s = total_time / (cols * rows)
+##    print('time_per_move_s = %0.3fs'%time_per_move_s)       # 0.436s
+
     stage.close()
