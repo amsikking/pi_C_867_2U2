@@ -391,6 +391,12 @@ if __name__ == '__main__':
     stage._enable_joystick(True)            # re-enable joystick
 
 ##    print("\nTesting 384 well plate:")
+##    # set stage properties for max speed:
+##    stage.set_velocity(120, 120)            # 0 -> 120
+##    stage.set_acceleration(500, 500)        # 0 -> 500
+##    stage.set_deceleration(500, 500)        # 0 -> 500
+##    stage.set_settling_time_ms(1, 1)        # 1 -> 1000
+##    stage.set_positional_tolerance_um(1, 1) # 0.2 -> 9.8
 ##    # find A1 center:
 ##    x_mm_A1_ul, y_mm_A1_ul = (50.2282, -34.8627) # A1 upper left
 ##    x_mm_A1_lr, y_mm_A1_lr = (47.3277, -31.8921) # A1 lower right
