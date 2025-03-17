@@ -390,7 +390,7 @@ if __name__ == '__main__':
     print(time_per_move_s, ' -> seconds per move')
     stage._enable_joystick(True)            # re-enable joystick
 
-##    print("\nTesting 384 well plate:")
+##    print("\nTesting 384 move calls:")
 ##    # set stage properties for max speed:
 ##    stage.set_velocity(120, 120)            # 0 -> 120
 ##    stage.set_acceleration(500, 500)        # 0 -> 500
