@@ -397,6 +397,29 @@ if __name__ == '__main__':
 ##    stage.set_deceleration(500, 500)        # 0 -> 500
 ##    stage.set_settling_time_ms(1, 1)        # 1 -> 1000
 ##    stage.set_positional_tolerance_um(1, 1) # 0.2 -> 9.8
+##    # generate move count:
+##    rows, cols = 16, 24
+##    # make calls:
+##    stage.move_mm(0, 0, relative=False)
+##    stage.verbose = False
+##    t0 = time.perf_counter()
+##    for move in range(cols * rows):
+##        stage.move_mm(0, 0, relative=False)
+##    stage.move_mm(0, 0, relative=False)
+##    t1 = time.perf_counter()
+##    # results:
+##    total_time = t1 - t0
+##    print('total_time = %0.2fs'%total_time)                 # 43.12s
+##    time_per_move_s = total_time / (cols * rows)
+##    print('time_per_move_s = %0.3fs'%time_per_move_s)       # 0.112s
+
+##    print("\nTesting 384 well plate:")
+##    # set stage properties for max speed:
+##    stage.set_velocity(120, 120)            # 0 -> 120
+##    stage.set_acceleration(500, 500)        # 0 -> 500
+##    stage.set_deceleration(500, 500)        # 0 -> 500
+##    stage.set_settling_time_ms(1, 1)        # 1 -> 1000
+##    stage.set_positional_tolerance_um(1, 1) # 0.2 -> 9.8
 ##    # find A1 center:
 ##    x_mm_A1_ul, y_mm_A1_ul = (50.2282, -34.8627) # A1 upper left
 ##    x_mm_A1_lr, y_mm_A1_lr = (47.3277, -31.8921) # A1 lower right
